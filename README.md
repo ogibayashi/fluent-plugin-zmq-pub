@@ -18,7 +18,8 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+	pubkey <%tag%>:<%key1%>
+	bindaddr tcp://*:5556
 
 ## Contributing
 

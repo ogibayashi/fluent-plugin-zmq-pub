@@ -16,4 +16,6 @@ Gem::Specification.new do |gem|
   gem.version       = "0.0.1"
   gem.add_development_dependency "fluentd"
   gem.add_runtime_dependency "fluentd"
+  gem.add_development_dependency "zmq"
+  gem.add_runtime_dependency "zmq"
 end
