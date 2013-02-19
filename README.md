@@ -1,30 +1,31 @@
-# Fluent::Plugin::Zmq::Pub
+# fluent-plugin-zmq-pub
 
-TODO: Write a gem description
+## Overview
 
-## Installation
+Fluentd plugin to publish records to ZeroMQ.
 
-Add this line to your application's Gemfile:
+## Build & Install
 
-    gem 'fluent-plugin-zmq-pub'
+This plugin is not registerd to official rubygems. 
 
-And then execute:
+`rake build
+fluent-gem zmq
+fluent-gem install ./pkg/fluent-plugin-zmq-pub-0.0.1.gem --local
+`
 
-    $ bundle
+## Configuration
 
-Or install it yourself as:
+`pubkey <%tag%>:<%key1%>
+bindaddr tcp://*:5556
+`
 
-    $ gem install fluent-plugin-zmq-pub
+* 'pubkey' specifies the publish key to ZeroMQ. 
+  * '<%tag%>' is replace by fluentd tag. '<%name%>' is replaced by fluentd record['name']. 
+  * Actual record to be published is '<pubkey> <reocord.to_msgpack>'.
+  * Subscriber can subscribe by '<pubkey>'.
 
-## Usage
+## Copyright
 
-	pubkey <%tag%>:<%key1%>
-	bindaddr tcp://*:5556
-
-## Contributing
-
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Added some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+* Copyright (c) 2013- Hironori Ogibayashi
+* License
+  * Apache License, Version 2.0
