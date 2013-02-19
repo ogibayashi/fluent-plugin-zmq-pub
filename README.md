@@ -8,16 +8,18 @@ Fluentd plugin to publish records to ZeroMQ.
 
 This plugin is not registerd to official rubygems. 
 
-`rake build
+```
+rake build
 fluent-gem zmq
 fluent-gem install ./pkg/fluent-plugin-zmq-pub-0.0.1.gem --local
-`
+```
 
 ## Configuration
 
-`pubkey <%tag%>:<%key1%>
+```
+pubkey <%tag%>:<%key1%>
 bindaddr tcp://*:5556
-`
+```
 
 * 'pubkey' specifies the publish key to ZeroMQ. 
   * '<%tag%>' is replace by fluentd tag. '<%name%>' is replaced by fluentd record['name']. 
