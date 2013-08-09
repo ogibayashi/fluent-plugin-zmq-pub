@@ -15,7 +15,7 @@ class ZmqPubOutputTest < Test::Unit::TestCase
   end
   
   CONFIG = %[
-      pubkey <%tag%>:<%key1%>
+      pubkey ${tag}:${key1}
       bindaddr tcp://*:5556
   ]
   
@@ -26,7 +26,7 @@ class ZmqPubOutputTest < Test::Unit::TestCase
   def test_configure
     d = create_driver
 
-    assert_equal '<%tag%>:<%key1%>', d.instance.pubkey
+    assert_equal '${tag}:${key1}', d.instance.pubkey
     assert_equal 'tcp://*:5556', d.instance.bindaddr
   end
   

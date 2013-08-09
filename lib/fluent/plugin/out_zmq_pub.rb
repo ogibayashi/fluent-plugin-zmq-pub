@@ -3,7 +3,7 @@ module Fluent
     Fluent::Plugin.register_output('zmq_pub', self)
 
     config_param :pubkey, :string
-    config_param :bindaddr, :string
+    config_param :bindaddr, :string, :default => 'tcp://*:5556'
 
     def initialize
       super
@@ -26,15 +26,16 @@ module Fluent
     end
 
     def write(chunk)
-      records = []
       chunk.msgpack_each{ |record|
-        pubkey_replaced = @pubkey.gsub(/<%(.+?)%>/){ |match|
-          if $1 == "tag"
+        pubkey_replaced = @pubkey.gsub(/\${(.*?)}/){ |s|
+          case $1
+          when 'tag'
             record[0]
           else
             record[2][$1]
           end
         }
+
         #  to_msgpack in format, unpack in write, then to_msgpack again... better way?
         @publisher.send(pubkey_replaced + " " + record.to_msgpack)
       }

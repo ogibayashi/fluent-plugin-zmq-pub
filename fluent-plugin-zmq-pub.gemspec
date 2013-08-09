@@ -2,8 +2,8 @@
 $:.push File.expand_path('../lib', __FILE__)
 
 Gem::Specification.new do |gem|
-  gem.authors       = ["Hironori Ogibayashi"]
-  gem.email         = ["hironori.ogibayashi@g.softbank.co.jp"]
+  gem.authors       = ["OGIBAYASHI Hironori"]
+  gem.email         = ["ogibayashi@gmail.com"]
   gem.description   = %q{0MQ publisher plugin for fluentd}
   gem.summary       = %q{0MQ publisher plugin for fluentd}
   gem.homepage      = ""
