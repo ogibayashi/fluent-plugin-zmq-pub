@@ -7,6 +7,7 @@ Gem::Specification.new do |gem|
   gem.description   = %q{0MQ publisher plugin for fluentd}
   gem.summary       = %q{0MQ publisher plugin for fluentd}
   gem.homepage      = ""
+  gem.licenses	    = ["Apache License, Version 2.0"]
 
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
