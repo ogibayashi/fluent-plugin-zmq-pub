@@ -8,6 +8,7 @@ module Fluent
     def initialize
       super
       require 'zmq'
+      @mutex = Mutex.new
     end
 
     def configure(conf)
@@ -37,9 +38,10 @@ module Fluent
         }
 
         #  to_msgpack in format, unpack in write, then to_msgpack again... better way?
-        @publisher.send(pubkey_replaced + " " + record.to_msgpack)
+        @mutex.synchronize { 
+          @publisher.send(pubkey_replaced + " " + record.to_msgpack,ZMQ::NOBLOCK)
+        }
       }
-      
     end
  
     def shutdown
