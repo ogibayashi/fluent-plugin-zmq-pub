@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
   gem.email         = ["ogibayashi@gmail.com"]
   gem.description   = %q{0MQ publisher plugin for fluentd}
   gem.summary       = %q{0MQ publisher plugin for fluentd, use zmq v3.2}
-  gem.homepage      = ""
+  gem.homepage      = "https://github.com/YueHonghui/fluent-plugin-zmq-pub"
   gem.licenses	    = ["Apache License, Version 2.0"]
 
   gem.files         = `git ls-files`.split($\)
