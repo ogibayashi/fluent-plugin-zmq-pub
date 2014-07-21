@@ -5,7 +5,7 @@ Gem::Specification.new do |gem|
   gem.authors       = ["OGIBAYASHI Hironori"]
   gem.email         = ["ogibayashi@gmail.com"]
   gem.description   = %q{0MQ publisher plugin for fluentd}
-  gem.summary       = %q{0MQ publisher plugin for fluentd}
+  gem.summary       = %q{0MQ publisher plugin for fluentd, use zmq v3.2}
   gem.homepage      = ""
   gem.licenses	    = ["Apache License, Version 2.0"]
 
@@ -17,6 +17,6 @@ Gem::Specification.new do |gem|
   gem.version       = "0.0.2"
   gem.add_development_dependency "fluentd"
   gem.add_runtime_dependency "fluentd"
-  gem.add_development_dependency "zmq"
-  gem.add_runtime_dependency "zmq"
+  gem.add_development_dependency "ffi-rzmq"
+  gem.add_runtime_dependency "ffi-rzmq"
 end

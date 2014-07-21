@@ -4,10 +4,11 @@ module Fluent
 
     config_param :pubkey, :string
     config_param :bindaddr, :string, :default => 'tcp://*:5556'
+    config_param :highwatermark, :integer, :default => 1000
 
     def initialize
       super
-      require 'zmq'
+      require 'ffi-rzmq'
       @mutex = Mutex.new
     end
 
@@ -17,8 +18,9 @@ module Fluent
     
     def start
       super
-      @context = ZMQ::Context.new(1)
+      @context = ZMQ::Context.new()
       @publisher = @context.socket(ZMQ::PUB)
+      @publisher.setsockopt(ZMQ::SNDHWM, @highwatermark)
       @publisher.bind(@bindaddr)
     end
 
@@ -39,7 +41,7 @@ module Fluent
 
         #  to_msgpack in format, unpack in write, then to_msgpack again... better way?
         @mutex.synchronize { 
-          @publisher.send(pubkey_replaced + " " + record.to_msgpack,ZMQ::NOBLOCK)
+          @publisher.send_string(pubkey_replaced + " " + record.to_msgpack,ZMQ::DONTWAIT)
         }
       }
     end
