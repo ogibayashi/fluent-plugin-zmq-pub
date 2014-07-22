@@ -8,6 +8,10 @@ Fluentd plugin to publish records to ZeroMQ.
 
 Sometimes I wanted to 'sniff' fluentd stream -- running my own programs to the stream without changing fluentd configuration and restarting fluentd. With this plugin, fluentd records are always published to ZeroMQ regardless of the existance of subscriber. After that I can start and stop my subcriber programs at any time. 
 
+== Dependence
+
+This plugin use ffi-rzmq to support ZMQ, and need v3.2 or greater version of ZMQ library installed in your system.
+
 == Configuration
 
   <match zmq.**>
