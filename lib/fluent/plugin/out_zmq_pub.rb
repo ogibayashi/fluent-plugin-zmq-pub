@@ -49,7 +49,7 @@ module Fluent
     def shutdown
       super
       @publisher.close
-      @context.close
+      @context.terminate
     end
 
   end
