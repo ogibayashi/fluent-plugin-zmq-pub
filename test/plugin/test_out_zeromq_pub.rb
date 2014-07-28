@@ -55,6 +55,7 @@ class ZmqPubOutputTest < Test::Unit::TestCase
     time = Time.parse("2011-01-02 13:14:15 UTC").to_i
     d.emit({"key1"=>"aaa"}, time)
     d.emit({"key1"=>"bbb", "key2"=>3}, time)
+    d.emit({"key1"=>"aaa", "key2"=>4}, time)
     
     d.run
     sleep 1
@@ -62,7 +63,8 @@ class ZmqPubOutputTest < Test::Unit::TestCase
     msg = ZMQ::Message.new
     @subscriber.recvmsg(msg,ZMQ::DONTWAIT)
     (key, record) = msg.copy_out_string.split(" ",2)
-    assert_equal ["test",time.to_i,{ "key1" => "aaa"}].to_msgpack, record
+    assert_equal [["test",time.to_i,{ "key1" => "aaa"}],
+                  ["test",time.to_i,{ "key1" => "aaa","key2" => 4 }]].to_msgpack, record
 
   end
 

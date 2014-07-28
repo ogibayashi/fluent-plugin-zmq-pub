@@ -27,6 +27,8 @@ module Fluent
     end
 
     def write(chunk)
+      records = { }
+      #  to_msgpack in format, unpack in write, then to_msgpack again... better way?
       chunk.msgpack_each{ |record|
         pubkey_replaced = @pubkey.gsub(/\${(.*?)}/){ |s|
           case $1
@@ -36,11 +38,12 @@ module Fluent
             record[2][$1]
           end
         }
+        records[pubkey_replaced] ||= []
+        records[pubkey_replaced] << record
 
-        #  to_msgpack in format, unpack in write, then to_msgpack again... better way?
-        @mutex.synchronize { 
-          @publisher.sendmsg(ZMQ::Message.create(pubkey_replaced + " " + record.to_msgpack),ZMQ::DONTWAIT)
-        }
+      }
+      records.each{ |k,v|
+        @publisher.sendmsg(ZMQ::Message.create(k + " " + v.to_msgpack),ZMQ::DONTWAIT)
       }
     end
  
