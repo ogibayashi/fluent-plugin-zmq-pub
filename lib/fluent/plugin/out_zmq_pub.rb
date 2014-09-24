@@ -4,6 +4,9 @@ module Fluent
 
     config_param :pubkey, :string
     config_param :bindaddr, :string, :default => 'tcp://*:5556'
+    config_param :highwatermark, :integer, :default => 1000
+    # Send multiple record with the same publish key at once
+    config_param :bulk_send, :bool, :default => false
 
     def initialize
       super
@@ -17,8 +20,9 @@ module Fluent
     
     def start
       super
-      @context = ZMQ::Context.new(1)
+      @context = ZMQ::Context.new()
       @publisher = @context.socket(ZMQ::PUB)
+      @publisher.setsockopt(ZMQ::SNDHWM, @highwatermark)
       @publisher.bind(@bindaddr)
     end
 
@@ -38,13 +42,23 @@ module Fluent
             record[2][$1]
           end
         }
-        records[pubkey_replaced] ||= []
-        records[pubkey_replaced] << record
-
+        if @bulk_send
+          records[pubkey_replaced] ||= []
+          records[pubkey_replaced] << record
+        else
+          @mutex.synchronize { 
+            @publisher.send_string(pubkey_replaced + " " + record.to_msgpack,ZMQ::DONTWAIT)
+          }
+        end
       }
-      records.each{ |k,v|
-        @publisher.sendmsg(ZMQ::Message.create(k + " " + v.to_msgpack),ZMQ::DONTWAIT)
-      }
+      if @bulk_send
+        @mutex.synchronize { 
+          records.each{  |k,v|
+            @publisher.send_string(k + " " + v.to_msgpack,ZMQ::DONTWAIT)
+          }
+        }
+      end
+        
     end
  
     def shutdown

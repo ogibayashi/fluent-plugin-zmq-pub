@@ -8,6 +8,10 @@ Fluentd plugin to publish records to ZeroMQ.
 
 Sometimes I wanted to 'sniff' fluentd stream -- running my own programs to the stream without changing fluentd configuration and restarting fluentd. With this plugin, fluentd records are always published to ZeroMQ regardless of the existance of subscriber. After that I can start and stop my subcriber programs at any time. 
 
+== Dependence
+
+This plugin use ffi-rzmq to support ZMQ, and need v3.2 or greater version of ZMQ library installed in your system.
+
 == Installation
 
 You need to install ZeroMQ libraries before installing this plugin
@@ -37,7 +41,7 @@ Put the configuration above to fluentd.conf, and save this sample code as 'sampl
 
   #!/usr/bin/env ruby
   
-  require 'ffi-zmq'
+  require 'ffi-rzmq'
   require 'msgpack'
   
   context = ZMQ::Context.new(1)
@@ -53,16 +57,13 @@ Put the configuration above to fluentd.conf, and save this sample code as 'sampl
   end
   
   while true
-    msg = ZMQ::Message.new
-    while subscriber.recvmsg(msg,ZMQ::DONTWAIT) && msg.size > 0
-      records =  MessagePack.unpack(msg.copy_out_string.split(" ",2)[1])
-      records.each{|record|
-        puts "tag: #{record[0]}"
-        puts "time: #{record[1]}"
-        puts "record: #{record[2]}"
-      }
-      msg.close
-      msg = ZMQ::Message.new
+    msg = ''
+    while subscriber.recv_string(msg,ZMQ::DONTWAIT) && msg.size > 0
+      record =  MessagePack.unpack(msg.split(" ",2)[1])
+      puts "tag: #{record[0]}"
+      puts "time: #{record[1]}"
+      puts "record: #{record[2]}"
+      msg = ''
     end
     sleep(0.1)
   end
