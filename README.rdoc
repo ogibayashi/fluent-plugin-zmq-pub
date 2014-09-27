@@ -27,6 +27,7 @@ You need to install ZeroMQ libraries before installing this plugin
     pubkey ${tag}:${key1}
     bindaddr tcp://*:5556
     flush_interval 1s
+    bulk_send true
   </match>
 
 * 'pubkey' specifies the publish key to ZeroMQ. 
@@ -34,6 +35,7 @@ You need to install ZeroMQ libraries before installing this plugin
   * Actual record to be published is '<pubkey> <reocord.to_msgpack>'.
   * Subscriber can subscribe by '<pubkey>'.
 * 'bindaddr' is the address to which ZeroMQ publisher socket to be bound.
+* If 'bulk_send' is set to true, send multiple records with the same publish key in one 'send_string' method. This improves the performance.
 
 == Example usage
 
@@ -86,6 +88,17 @@ Then you will get the following output from sample_sub.rb
 (You should not get the second record("key1":"bbb") because the publish key to zmq was "zmq.test.tag:bbb" and specified subscibe key was "zmq.test.tag:aaa")
 
 The nice thing is that once you put this plugin to your fluentd.conf and start fluentd, you can start and stop any subscriber programs without changing fluentd configuration.
+
+== zmq_sub input plugin
+
+Input plugin to subscribe the output of zmq_pub is also included. Here is the example configuration.
+
+    <source>
+       type zmq_sub
+       publisher tcp://127.0.0.1:5556
+       bulk_send true
+    </source>
+
 
 == Copyright
 

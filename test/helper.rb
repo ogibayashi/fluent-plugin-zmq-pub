@@ -23,6 +23,7 @@ unless ENV.has_key?('VERBOSE')
 end
 
 require 'fluent/plugin/out_zmq_pub'
+require 'fluent/plugin/in_zmq_sub'
 
 class Test::Unit::TestCase
 end
