@@ -4,8 +4,8 @@ $:.push File.expand_path('../lib', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["OGIBAYASHI Hironori"]
   gem.email         = ["ogibayashi@gmail.com"]
-  gem.description   = %q{0MQ publisher plugin for fluentd}
-  gem.summary       = %q{0MQ publisher plugin for fluentd, use 0MQ v3.2 or greater version}
+  gem.description   = %q{0MQ publisher/subscriber plugin for fluentd}
+  gem.summary       = %q{0MQ publisher/subscriber plugin for fluentd, use 0MQ v3.2 or greater version}
   gem.homepage      = ""
   gem.licenses	    = ["Apache License, Version 2.0"]
 
@@ -14,7 +14,7 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "fluent-plugin-zmq-pub"
   gem.require_paths = ["lib"]
-  gem.version       = "0.0.2"
+  gem.version       = "0.0.4"
   gem.add_development_dependency "fluentd"
   gem.add_runtime_dependency "fluentd"
   gem.add_development_dependency "ffi-rzmq"

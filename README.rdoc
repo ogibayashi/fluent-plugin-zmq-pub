@@ -97,7 +97,11 @@ Input plugin to subscribe the output of zmq_pub is also included. Here is the ex
        type zmq_sub
        publisher tcp://127.0.0.1:5556
        bulk_send true
+       subkey zmq.,zmq2
     </source>
+
+* If zmq_pub set `bulk_send` to true, zmq_sub also set it to true.
+* `subkey` is a comma separated list of keys to subscribe. In this example, keys starting "zmq." or "zmq2." will be subscribed.
 
 
 == Copyright
