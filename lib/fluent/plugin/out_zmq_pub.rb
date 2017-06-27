@@ -1,3 +1,5 @@
+require 'fluent/output'
+
 module Fluent
   class Fluent::ZmqPubOutput < Fluent::BufferedOutput
     Fluent::Plugin.register_output('zmq_pub', self)

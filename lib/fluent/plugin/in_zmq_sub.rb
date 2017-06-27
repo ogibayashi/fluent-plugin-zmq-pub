@@ -1,3 +1,5 @@
+require 'fluent/input'
+
 module Fluent
 
   class ZmqSubInput < Fluent::Input
