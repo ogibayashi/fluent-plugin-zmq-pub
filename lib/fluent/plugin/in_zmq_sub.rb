@@ -28,10 +28,10 @@ module Fluent
     end
 
     def shutdown
-      super
       Thread.kill(@thread)
       @thread.join
       @context.terminate
+      super
     end
 
     def run
