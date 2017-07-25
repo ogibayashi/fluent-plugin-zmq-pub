@@ -1,3 +1,5 @@
+require 'fluent/output'
+
 module Fluent
   class Fluent::ZmqPubOutput < Fluent::BufferedOutput
     Fluent::Plugin.register_output('zmq_pub', self)
@@ -46,25 +48,25 @@ module Fluent
           records[pubkey_replaced] ||= []
           records[pubkey_replaced] << record
         else
-          @mutex.synchronize { 
+          @mutex.synchronize {
             @publisher.send_string(pubkey_replaced + " " + record.to_msgpack,ZMQ::DONTWAIT)
           }
         end
       }
       if @bulk_send
-        @mutex.synchronize { 
+        @mutex.synchronize {
           records.each{  |k,v|
             @publisher.send_string(k + " " + v.to_msgpack,ZMQ::DONTWAIT)
           }
         }
       end
-        
+
     end
- 
+
     def shutdown
-      super
       @publisher.close
       @context.terminate
+      super
     end
 
   end
