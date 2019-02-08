@@ -23,15 +23,20 @@ You need to install ZeroMQ libraries before installing this plugin
 == Configuration
 
   <match zmq.**>
-    type zmq_pub
+    @type zmq_pub
     pubkey ${tag}:${key1}
     bindaddr tcp://*:5556
     flush_interval 1s
     bulk_send true
+    <buffer tag, key1>
+      @type memory
+    </buffer>
   </match>
 
-* 'pubkey' specifies the publish key to ZeroMQ. 
-  * '${tag}' is replace by fluentd tag. '${name}' is replaced by fluentd record['name']. 
+* 'pubkey' specifies the publish key to ZeroMQ.
+  * '${tag}' is replace by fluentd tag. '${name}' is replaced by fluentd record['name'].
+    * Fluentd built-in placehodlers requests to use custom '<buffer>' attributes.
+    * In more detail, please refer to the official document: https://docs.fluentd.org/v1.0/articles/buffer-section#placeholders
   * Actual record to be published is '<pubkey> <reocord.to_msgpack>'.
   * Subscriber can subscribe by '<pubkey>'.
 * 'bindaddr' is the address to which ZeroMQ publisher socket to be bound.
@@ -57,14 +62,16 @@ Put the configuration above to fluentd.conf, and save this sample code as 'sampl
   else
     subscriber.setsockopt(ZMQ::SUBSCRIBE,"")
   end
-  
+
   while true
     msg = ''
     while subscriber.recv_string(msg,ZMQ::DONTWAIT) && msg.size > 0
-      record =  MessagePack.unpack(msg.split(" ",2)[1])
-      puts "tag: #{record[0]}"
-      puts "time: #{record[1]}"
-      puts "record: #{record[2]}"
+      records =  MessagePack.unpack(msg.split(" ",2)[1])
+      records.each do |record|
+        puts "tag: #{record[0]}"
+        puts "time: #{record[1]}"
+        puts "record: #{record[2]}"
+      end
       msg = ''
     end
     sleep(0.1)
@@ -94,7 +101,7 @@ The nice thing is that once you put this plugin to your fluentd.conf and start f
 Input plugin to subscribe the output of zmq_pub is also included. Here is the example configuration.
 
     <source>
-       type zmq_sub
+       @type zmq_sub
        publisher tcp://127.0.0.1:5556
        bulk_send true
        subkey zmq.,zmq2
